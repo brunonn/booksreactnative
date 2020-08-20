@@ -23,11 +23,11 @@ class CreateOwnBookScreen extends React.Component {
   }
 
   addOwnBookHandler = () => {
-    const {userId, addOwnBook} = this.props;
+    const {userId, addOwnBook, navigation} = this.props;
     const {title, authors, bookSource} = this.state;
     const authorsList = authors.split(',');
-    console.log(authorsList);
     addOwnBook(userId, title, authorsList, bookSource.uri);
+    navigation.navigate('Books');
   };
 
   getPhoto = () => {

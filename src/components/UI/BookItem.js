@@ -3,17 +3,12 @@ import {View, Image, Text, StyleSheet} from 'react-native';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {getColors} from '../../colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-const BookItem = ({key, title, authors, source, onPress}) => {
+const BookItem = ({title, authors, source, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} key={key}>
-      <View style={styles.container} >
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
-            style={styles.bookImage}
-            width={60}
-            height={70}
-            source={source}
-          />
+          <Image style={styles.bookImage} source={source} />
         </View>
         <View style={styles.titleAuthorContainer}>
           <Text style={styles.title}>{title}</Text>
@@ -21,7 +16,7 @@ const BookItem = ({key, title, authors, source, onPress}) => {
             <Text style={styles.author}>
               {authors.map((author, index) => {
                 if (index === authors.length - 1) return author;
-                return `${author}, `
+                return `${author}, `;
               })}
             </Text>
           ) : null}
@@ -69,8 +64,8 @@ const styles = StyleSheet.create({
   },
   bookImage: {
     width: 60,
-    width: 70,
-    //resizeMode: 'contain',
+    height: 70,
+    resizeMode: 'contain',
   },
 });
 

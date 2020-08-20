@@ -1,16 +1,21 @@
 import React from 'react';
-import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Image,
+} from 'react-native';
 
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Button from '../../components/UI/Button';
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {deleteBook} from '../../actions/booksActions';
 import {getColors} from '../../colors';
 
 class BookDetailScreen extends React.Component {
-  constructor(props) {super(props)}
-  componentDidMount() {}
   deleteBookHandler = () => {
     const {userId, deleteBook, navigation} = this.props;
     const {bookId} = this.props.route.params;
@@ -18,7 +23,7 @@ class BookDetailScreen extends React.Component {
     navigation.goBack();
   };
   render() {
-    const {book} = this.props.route.params;
+    const {book} = this.props?.route?.params;
     return (
       <ScrollView style={{backgroundColor: getColors('white'), flex: 1}}>
         <View style={styles.container}>
@@ -34,7 +39,7 @@ class BookDetailScreen extends React.Component {
           <Image source={{uri: book?.uri}} style={styles.image} />
           <TouchableOpacity
             style={styles.deleteContainer}
-            onPress={() => this.deleteBookHandler()}>
+            onPress={this.deleteBookHandler}>
             <Text style={styles.deleteText}>Usuń książkę</Text>
           </TouchableOpacity>
         </View>

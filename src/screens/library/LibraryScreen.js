@@ -54,7 +54,13 @@ class LibraryScreen extends Component {
   );
   renderBook = (item) => {
     return (
-      <TouchableOpacity style={styles.bookContainer}>
+      <TouchableOpacity
+        style={styles.bookContainer}
+        onPress={() =>
+          this.props.navigation.navigate('LibraryBookDetails', {
+            book: item,
+          })
+        }>
         <Image source={{uri: item?.uri}} style={{width: 100, height: 150}} />
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.authors}>{item?.authors}</Text>
@@ -68,7 +74,7 @@ class LibraryScreen extends Component {
       <View style={styles.container}>
         <FlatList
           data={booksFound.length > 0 ? booksFound : allBooks}
-          ListHeaderComponent={this.renderHeader()}
+          ListHeaderComponent={this.renderHeader}
           renderItem={({item}) => this.renderBook(item)}
           numColumns={3}
           keyExtractor={(item, index) => index.toString()}

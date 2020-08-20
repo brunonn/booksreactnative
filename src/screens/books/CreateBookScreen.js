@@ -82,7 +82,7 @@ class CreateBookScreen extends React.Component {
             <Button
               orange
               title="Dodaj książkę"
-              onPress={() => this.addBookHandler()}
+              onPress={this.addBookHandler}
             />
           </View>
         </ScrollView>

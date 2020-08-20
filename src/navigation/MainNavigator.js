@@ -14,6 +14,7 @@ import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {getColors} from '../colors';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import LibraryScreen from '../screens/library/LibraryScreen';
+import LibraryBookDetailsScreen from '../screens/library/LibraryBookDetailsScreen';
 
 const defaultNavOptions = {
   headerStyle: {
@@ -84,6 +85,11 @@ const LibraryStackNavigator = () => {
       <LibraryStack.Screen
         name="Library"
         component={LibraryScreen}
+        options={{title: "Biblioteka"}}
+      />
+       <LibraryStack.Screen
+        name="LibraryBookDetails"
+        component={LibraryBookDetailsScreen}
         options={{title: "Biblioteka"}}
       />
     </LibraryStack.Navigator>

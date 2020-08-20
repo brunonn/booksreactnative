@@ -6,14 +6,14 @@ import {
   StyleSheet,
   RefreshControl,
   Image,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import {getUserBooks} from '../../actions/booksActions';
 import {getUser} from '../../actions/authActions';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import Button from '../../components/UI/Button';
-import {getColors} from '../../colors';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+
 import BookItem from '../../components/UI/BookItem';
 import Spinner from '../../components/UI/Spinner';
 
@@ -25,8 +25,15 @@ class BooksScreen extends React.Component {
     };
   }
   componentDidMount() {
-    this.onRefresh();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.onRefresh();
+    });
   }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
   onRefresh() {
     const {getUserBooks, userId} = this.props;
     getUserBooks(userId);
@@ -36,38 +43,37 @@ class BooksScreen extends React.Component {
   }
   render() {
     const {pending, userBooks, navigation} = this.props;
+
     if (pending) return <Spinner />;
     return (
       <View style={styles.container}>
-        <ScrollView
+        <FlatList
+          data={userBooks}
+          renderItem={({item}) => (
+            <BookItem
+              title={item.title}
+              authors={item.authors}
+              source={{
+                uri: item.uri
+                  ? item.uri
+                  : 'http://onlinebookclub.org/book-covers/id449795-125.jpg',
+              }}
+              onPress={() => {
+                navigation.navigate('BookDetails', {
+                  book: item,
+                  bookId: item.id,
+                });
+              }}
+            />
+          )}
+          keyExtractor={(item) => item.id}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={() => this.onRefresh()}
             />
-          }>
-          {userBooks.map((book, i) => {
-            return (
-              <View key={i}>
-                <BookItem
-                  title={book.title}
-                  authors={book.authors}
-                  source={{
-                    uri: book.uri
-                      ? book.uri
-                      : 'http://onlinebookclub.org/book-covers/id449795-125.jpg',
-                  }}
-                  onPress={() => {
-                    navigation.navigate('BookDetails', {
-                      book: book,
-                      bookId: book.id,
-                    });
-                  }}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
+          }
+        />
       </View>
     );
   }
