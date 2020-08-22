@@ -43,12 +43,14 @@ class RegisterScreen extends React.Component {
             label="Hasło"
             value={password}
             onChangeText={(password) => this.setState({password})}
+            secureTextEntry
           />
           <Input
             autoCapitalize="none"
             label="Potwierdź hasło"
             value={confirmPassword}
             onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+            secureTextEntry
           />
         </View>
 

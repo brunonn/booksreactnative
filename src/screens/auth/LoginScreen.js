@@ -51,6 +51,7 @@ class LoginScreen extends React.Component {
               value={password}
               onChangeText={(password) => this.setState({password})}
               inputStyle={{color: getColors('white')}}
+              secureTextEntry
             />
           </View>
           <Button
