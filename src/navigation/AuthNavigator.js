@@ -9,8 +9,6 @@ import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import {Colors} from '../locales/colors';
-import EvilIcons from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
 
 const AuthStack = createStackNavigator();
 

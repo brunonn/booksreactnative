@@ -36,8 +36,7 @@ export const getUserBooks = (userId) => async (dispatch) => {
         payload: values,
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
       dispatch({
         type: GET_USER_BOOKS_FAIL,
       });

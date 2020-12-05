@@ -1,23 +1,44 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {getColors} from '../../locales/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const Button = ({orange, title, onPress, buttonStyle, textStyle}) => {
+interface ButtonProps {
+  orange: boolean;
+  title: string;
+  onPress: () => void;
+  buttonStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
+
+const Button = ({
+  orange,
+  title,
+  onPress,
+  buttonStyle,
+  textStyle,
+}: ButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        style={{
-          ...styles.container,
-          backgroundColor: orange ? getColors('orange') : getColors('cyan'),
+        style={[
+          styles.container,
+          {backgroundColor: orange ? getColors('orange') : getColors('cyan')},
           buttonStyle,
-        }}>
+        ]}>
         <Text
-          style={{
-            ...styles.title,
-            color: orange ? getColors('black') : getColors('white'),
-            ...textStyle,
-          }}>
+          style={[
+            styles.title,
+            {color: orange ? getColors('black') : getColors('white')},
+            textStyle,
+          ]}>
           {title}
         </Text>
       </View>

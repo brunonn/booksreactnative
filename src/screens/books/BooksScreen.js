@@ -1,83 +1,60 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  RefreshControl,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, RefreshControl, FlatList} from 'react-native';
 import {getUserBooks} from '../../actions/booksActions';
-import {getUser} from '../../actions/authActions';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import BookItem from '../../components/UI/BookItem';
 import Spinner from '../../components/UI/Spinner';
 
-class BooksScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false,
-    };
-  }
-  componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.onRefresh();
-    });
-  }
+const BooksScreen = ({navigation}) => {
+  const [refreshing, setRefreshing] = useState(false);
+  const userId = useSelector((state) => state.auth.userId);
+  const pending = useSelector((state) => state.books.pending);
+  const userBooks = useSelector((state) => state.books.userBooks);
+  const dispatch = useDispatch();
 
-  componentWillUnmount() {
-    this._unsubscribe();
-  }
+  useEffect(() => {
+    dispatch(getUserBooks(userId));
+  }, [dispatch, userId]);
 
-  onRefresh() {
-    const {getUserBooks, userId} = this.props;
-    getUserBooks(userId);
-  }
-  show() {
-    console.log(this.props.userBooks);
-  }
-  render() {
-    const {pending, userBooks, navigation} = this.props;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(getUserBooks(userId));
+    setRefreshing(false);
+  };
 
-    if (pending) return <Spinner />;
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={userBooks}
-          renderItem={({item}) => (
-            <BookItem
-              title={item.title}
-              authors={item.authors}
-              source={{
-                uri: item.uri
-                  ? item.uri
-                  : 'http://onlinebookclub.org/book-covers/id449795-125.jpg',
-              }}
-              onPress={() => {
-                navigation.navigate('BookDetails', {
-                  book: item,
-                  bookId: item.id,
-                });
-              }}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.onRefresh()}
-            />
-          }
-        />
-      </View>
-    );
+  if (pending) {
+    return <Spinner />;
   }
-}
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={userBooks}
+        renderItem={({item}) => (
+          <BookItem
+            title={item.title}
+            authors={item.authors}
+            source={{
+              uri: item.uri
+                ? item.uri
+                : 'http://onlinebookclub.org/book-covers/id449795-125.jpg',
+            }}
+            onPress={() => {
+              navigation.navigate('BookDetails', {
+                book: item,
+                bookId: item.id,
+              });
+            }}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -86,17 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-BooksScreen.propTypes = {
-  getUserBooks: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
-  userId: PropTypes.string,
-  userBooks: PropTypes.array,
-};
-
-const mapStateToProps = (state) => ({
-  userId: state.auth.userId,
-  pending: state.books.pending,
-  userBooks: state.books.userBooks,
-});
-
-export default connect(mapStateToProps, {getUserBooks})(BooksScreen);
+export default BooksScreen;

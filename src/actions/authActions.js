@@ -32,7 +32,7 @@ export const login = (email, password) => async (dispatch) => {
         payload: userId,
       });
     })
-    .catch((err) => {
+    .catch(() => {
       dispatch({
         type: LOGIN_FAIL,
       });
@@ -51,8 +51,7 @@ export const register = (email, password) => async (dispatch) => {
         type: REGISTER_SUCCESS,
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
       dispatch({
         type: REGISTER_FAIL,
       });

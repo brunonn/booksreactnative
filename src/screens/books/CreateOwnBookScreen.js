@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {Input} from 'react-native-elements';
 import {getColors} from '../../locales/colors';
 import ImagePicker from 'react-native-image-picker';

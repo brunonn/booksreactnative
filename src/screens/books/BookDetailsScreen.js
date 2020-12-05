@@ -5,48 +5,45 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Image,
 } from 'react-native';
 
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import Button from '../../components/UI/Button';
+import {useSelector, useDispatch} from 'react-redux';
 import {deleteBook} from '../../actions/booksActions';
 import {getColors} from '../../locales/colors';
 
-class BookDetailScreen extends React.Component {
-  deleteBookHandler = () => {
-    const {userId, deleteBook, navigation} = this.props;
-    const {bookId} = this.props.route.params;
-    deleteBook(userId, bookId);
+const BookDetailScreen = ({navigation, route}) => {
+  const {book, bookId} = route?.params;
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.userId);
+  const deleteBookHandler = () => {
+    dispatch(deleteBook(userId, bookId));
     navigation.goBack();
   };
-  render() {
-    const {book} = this.props?.route?.params;
-    return (
-      <ScrollView style={{backgroundColor: getColors('white'), flex: 1}}>
-        <View style={styles.container}>
-          <Text style={styles.title}>{book.title}</Text>
-          <Text style={styles.authors}>
-            {' '}
-            {book.authors?.map((author, index) => {
-              if (index === book.authors.length - 1) return author;
-              return `${author}, `;
-            })}
-          </Text>
+  return (
+    <ScrollView style={{backgroundColor: getColors('white'), flex: 1}}>
+      <View style={styles.container}>
+        <Text style={styles.title}>{book.title}</Text>
+        <Text style={styles.authors}>
+          {' '}
+          {book.authors?.map((author, index) => {
+            if (index === book.authors.length - 1) {
+              return author;
+            }
+            return `${author}, `;
+          })}
+        </Text>
 
-          <Image source={{uri: book?.uri}} style={styles.image} />
-          <TouchableOpacity
-            style={styles.deleteContainer}
-            onPress={this.deleteBookHandler}>
-            <Text style={styles.deleteText}>Usuń książkę</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    );
-  }
-}
+        <Image source={{uri: book?.uri}} style={styles.image} />
+        <TouchableOpacity
+          style={styles.deleteContainer}
+          onPress={deleteBookHandler}>
+          <Text style={styles.deleteText}>Remove book from your library</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -78,15 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-BookDetailScreen.propTypes = {
-  userId: PropTypes.string.isRequired,
-  pending: PropTypes.bool.isRequired,
-  deleteBook: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  pending: state.books.pending,
-  userId: state.auth.userId,
-});
-
-export default connect(mapStateToProps, {deleteBook})(BookDetailScreen);
+export default BookDetailScreen;

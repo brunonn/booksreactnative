@@ -27,7 +27,7 @@ export const updateProfile = (userId, displayName) => async (dispatch) => {
       });
       console.log('Udało się uaktualnić profil');
     })
-    .catch((err) => {
+    .catch(() => {
       dispatch({
         type: CHANGE_PROFILE_DATA_FAIL,
       });

@@ -85,12 +85,12 @@ const LibraryStackNavigator = () => {
       <LibraryStack.Screen
         name="Library"
         component={LibraryScreen}
-        options={{title: "Biblioteka"}}
+        options={{title: 'Biblioteka'}}
       />
-       <LibraryStack.Screen
+      <LibraryStack.Screen
         name="LibraryBookDetails"
         component={LibraryBookDetailsScreen}
-        options={{title: "Biblioteka"}}
+        options={{title: 'Biblioteka'}}
       />
     </LibraryStack.Navigator>
   );

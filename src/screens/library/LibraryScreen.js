@@ -27,7 +27,7 @@ class LibraryScreen extends Component {
   }
   searchBooksHandler = (term) => {
     const noLetters = ['', '(', ')'];
-    for (letter of noLetters) {
+    for (const letter of noLetters) {
       if (term.includes('(')) return;
     }
 

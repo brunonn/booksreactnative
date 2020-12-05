@@ -10,7 +10,7 @@ import {
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
   SET_USERID_SUCCESS,
-  SET_USERID_FAIL
+  SET_USERID_FAIL,
 } from '../actions/types';
 
 const initialState = {

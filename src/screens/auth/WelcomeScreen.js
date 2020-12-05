@@ -3,37 +3,30 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Button} from '../../components/UI';
 import {getColors} from '../../locales/colors';
 
-class WelcomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const {navigation} = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Twoje Książki</Text>
-        </View>
-        <View style={{marginTop: 100}}>
-          <Text style={styles.bottomTitle}>
-            Kolekcjonuj swoje książki i szukaj nowych
-          </Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <Button
-            orange
-            title="Zaloguj się"
-            onPress={() => navigation.navigate('Login')}
-          />
-          <Button
-            title="Zarejestruj się"
-            onPress={() => navigation.navigate('Register')}
-          />
-        </View>
+const WelcomeScreen = ({navigation}) => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Your books</Text>
       </View>
-    );
-  }
-}
+      <View style={{marginTop: 100}}>
+        <Text style={styles.bottomTitle}>Collect your books and</Text>
+        <Text style={styles.bottomTitle}>search for new ones</Text>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          orange
+          title="Sign in"
+          onPress={() => navigation.navigate('Login')}
+        />
+        <Button
+          title="Register"
+          onPress={() => navigation.navigate('Register')}
+        />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

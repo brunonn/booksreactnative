@@ -4,7 +4,18 @@ import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from '../../locales/colors';
 
-const BookItem = ({title, authors, source, onPress}) => {
+interface ImageSource {
+  uri: string;
+}
+
+interface BookItemProps {
+  title: string;
+  authors: string[];
+  source: ImageSource;
+  onPress: () => void;
+}
+
+const BookItem = ({title, authors, source, onPress}: BookItemProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>

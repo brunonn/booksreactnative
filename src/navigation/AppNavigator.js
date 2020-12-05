@@ -1,59 +1,41 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-import {isSignedIn, setUserId} from '../actions/authActions';
+import {setUserId} from '../actions/authActions';
 
 import {AsyncStorage} from 'react-native';
 
 import MainNavigator from './MainNavigator';
 import AuthNavigator from './AuthNavigator';
-import Spinner from '../components/UI/Spinner';
+import {Spinner} from '../components/UI';
 
-class AppNavigator extends React.Component {
-  componentDidMount() {
-    const {isSignedIn} = this.props;
-    isSignedIn();
-    this._retrieveData();
-  }
+const AppNavigator = () => {
+  const dispatch = useDispatch();
+  const isAuth = useSelector((state) => !!state.auth.userId);
+  const pending = useSelector((state) => state.auth.pending);
 
-  _retrieveData = async (dispatch) => {
-    try {
+  useEffect(() => {
+    const _retrieveData = async () => {
       const value = await AsyncStorage.getItem('userId');
       if (value === null) {
         AsyncStorage.clear();
         return;
       }
-      this.props.setUserId(value);
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+      dispatch(setUserId(value));
+    };
+    _retrieveData();
+  }, [dispatch]);
 
-  render() {
-    const {isAuth, pending} = this.props;
-    if (pending) return <Spinner />;
-    return (
-      <NavigationContainer>
-        {isAuth && <MainNavigator />}
-        {!isAuth && <AuthNavigator />}
-      </NavigationContainer>
-    );
+  if (pending) {
+    return <Spinner />;
   }
-}
-
-AppNavigator.propTypes = {
-  isAuth: PropTypes.bool.isRequired,
-  pending: PropTypes.bool.isRequired,
-  isSignedIn: PropTypes.func.isRequired,
-  setUserId: PropTypes.func.isRequired,
+  return (
+    <NavigationContainer>
+      {isAuth && <MainNavigator />}
+      {!isAuth && <AuthNavigator />}
+    </NavigationContainer>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  isAuth: state.auth.isAuth,
-  pending: state.auth.pending,
-});
-
-export default connect(mapStateToProps, {isSignedIn, setUserId})(AppNavigator);
+export default AppNavigator;
