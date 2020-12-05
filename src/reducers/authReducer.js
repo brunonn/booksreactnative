@@ -1,52 +1,35 @@
 import {
-  LOGIN_PENDING,
   LOGIN_SUCCESS,
-  LOGIN_FAIL,
   LOGOUT_SUCCESS,
-  REGISTER_PENDING,
   REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  AUTHENTICATION_PENDING,
-  AUTHENTICATION_SUCCESS,
-  AUTHENTICATION_FAIL,
-  SET_USERID_SUCCESS,
-  SET_USERID_FAIL,
+  AUTH_PENDING,
+  AUTH_FAIL,
+  SET_USER,
+  CHANGE_PROFILE_SUCCESS,
 } from '../actions/types';
 
 const initialState = {
   pending: false,
-  error: false,
-  isAuth: false,
-  userId: null,
+  user: null,
 };
 
 export default (state = initialState, action) => {
   const {type, payload} = action;
   switch (type) {
-    case LOGIN_PENDING:
-      return {...state, pending: true, error: false};
+    case SET_USER:
+      return {...state, user: payload};
+    case AUTH_PENDING:
+      return {...state, pending: true};
+    case AUTH_FAIL:
+      return {...state, pending: false, user: null};
     case LOGIN_SUCCESS:
-      return {...state, pending: false, error: false, userId: payload};
-    case LOGIN_FAIL:
-      return {...state, pending: false, error: true};
+      return {...state, pending: false, user: payload};
     case LOGOUT_SUCCESS:
-      return {...state, pending: false, isAuth: false};
-    case REGISTER_PENDING:
-      return {...state, pending: true, error: false};
+      return {...state, pending: false, user: null};
     case REGISTER_SUCCESS:
-      return {...state, pending: false, error: false};
-    case REGISTER_FAIL:
-      return {...state, pending: false, error: true};
-    case AUTHENTICATION_PENDING:
-      return {...state, pending: true, error: false};
-    case AUTHENTICATION_SUCCESS:
-      return {...state, pending: false, isAuth: true};
-    case AUTHENTICATION_FAIL:
-      return {...state, pending: false, isAuth: false, error: true};
-    case SET_USERID_SUCCESS:
-      return {...state, userId: payload};
-    case SET_USERID_FAIL:
-      return {...state, userId: null};
+      return {...state, pending: false};
+    case CHANGE_PROFILE_SUCCESS:
+      return {...state, user: payload, pending: false};
     default:
       return state;
   }

@@ -1,84 +1,33 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-} from 'react-native';
-import {updateProfile, getDataProfile} from '../../actions/profileActions';
+import {View, Text} from 'react-native';
 import {logout} from '../../actions/authActions';
 
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Button from '../../components/UI/Button';
-import Spinner from '../../components/UI/Spinner';
+import {useNavigation} from '@react-navigation/native';
 
-class ProfileScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    const {getDataProfile} = this.props;
-    getDataProfile();
-    this.focusSubscription = this.props.navigation.addListener('focus', () => {
-      getDataProfile();
-    });
-  }
-  componentWillUnmount() {
-    this.focusSubscription();
-  }
-  logoutHandler = () => {
-    const {logout} = this.props;
-    logout();
-  };
-  editProfileHandler = () => {
-    const {navigation} = this.props;
-    navigation.navigate('EditProfile');
-  };
-  render() {
-    const {dataProfile, loadingProfileData, updatingProfile} = this.props;
-    if (loadingProfileData || updatingProfile) {
-      return <Spinner />;
-    }
+const ProfileScreen = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const user = useSelector((state) => state.auth.user);
 
-    return (
-      <View style={{flex: 1, alignItems: 'center', marginTop: 20}}>
-        <Text style={{fontFamily: 'Poppins-Regular', fontSize: 30}}>
-          Witaj {dataProfile.displayName}
-        </Text>
-       
-        <View style={{position: 'absolute', bottom: 10}}>
-          <Button
-            orange
-            title="Edytuj profil"
-            onPress={() => this.editProfileHandler()}
-          />
+  return (
+    <View style={{flex: 1, alignItems: 'center', marginTop: 20}}>
+      <Text style={{fontFamily: 'Poppins-Regular', fontSize: 30}}>
+        Welcome {user?.displayName}
+      </Text>
 
-          <Button title="Wyloguj" onPress={() => this.logoutHandler()} />
-        </View>
+      <View style={{position: 'absolute', bottom: 10}}>
+        <Button
+          orange
+          title="Edytuj profil"
+          onPress={() => navigation.navigate('EditProfile')}
+        />
+
+        <Button title="Wyloguj" onPress={() => dispatch(logout())} />
       </View>
-    );
-  }
-}
-
-ProfileScreen.propTypes = {
-  updateProfile: PropTypes.func.isRequired,
-  getDataProfile: PropTypes.func.isRequired,
-  dataProfile: PropTypes.object.isRequired,
-  loadingProfileData: PropTypes.bool.isRequired,
-  logout: PropTypes.func.isRequired,
-  updatingProfile: PropTypes.bool.isRequired,
+    </View>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  dataProfile: state.profile.dataProfile,
-  loadingProfileData: state.profile.loadingProfileData,
-  updatingProfile: state.profile.updatingProfile,
-});
-
-export default connect(mapStateToProps, {
-  updateProfile,
-  logout,
-  getDataProfile,
-})(ProfileScreen);
+export default ProfileScreen;

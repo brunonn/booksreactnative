@@ -1,77 +1,36 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-} from 'react-native';
-import {updateProfile, getDataProfile} from '../../actions/profileActions';
-import {logout} from '../../actions/authActions';
+import React, {useState} from 'react';
+import {View} from 'react-native';
+import {updateProfile} from '../../actions/authActions';
 
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Button from '../../components/UI/Button';
-import Spinner from '../../components/UI/Spinner';
 import {Input} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
-class EditProfileScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      displayName: '',
-    };
-  }
-  componentDidMount() {}
+const EditProfileScreen = () => {
+  const user = useSelector((state) => state.auth.user);
+  const [displayName, setDisplayName] = useState(user.displayName);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
-  updateProfileHandler = () => {
-    const {userId, updateProfile} = this.props;
-    updateProfile(userId, this.state.displayName);
-    const {navigation} = this.props;
+  const handleUpdateProfile = () => {
+    dispatch(updateProfile(displayName));
     navigation.goBack();
   };
-  render() {
-    const {dataProfile, loadingProfileData} = this.props;
-    if (loadingProfileData) {
-      return <Spinner />;
-    }
 
-    return (
-      <View style={{flex: 1, alignItems: 'center', marginTop: 20}}>
-        <Input
-          label="Imię"
-          value={this.state.displayName}
-          onChangeText={(displayName) => this.setState({displayName})}
-        />
+  return (
+    <View style={{flex: 1, alignItems: 'center', marginTop: 20}}>
+      <Input
+        label="Imię"
+        value={displayName}
+        onChangeText={(text) => setDisplayName(text)}
+      />
 
-        <View style={{position: 'absolute', bottom: 10}}>
-          <Button
-            orange
-            title="Zapisz zmiany"
-            onPress={() => this.updateProfileHandler()}
-          />
-        </View>
+      <View style={{position: 'absolute', bottom: 10}}>
+        <Button orange title="Zapisz zmiany" onPress={handleUpdateProfile} />
       </View>
-    );
-  }
-}
-
-EditProfileScreen.propTypes = {
-  updateProfile: PropTypes.func.isRequired,
-  getDataProfile: PropTypes.func.isRequired,
-  dataProfile: PropTypes.object.isRequired,
-  loadingProfileData: PropTypes.bool.isRequired,
-  userId: PropTypes.string,
+    </View>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  dataProfile: state.profile.dataProfile,
-  loadingProfileData: state.profile.loadingProfileData,
-  userId: state.auth.userId,
-});
-
-export default connect(mapStateToProps, {
-  updateProfile,
-
-  getDataProfile,
-})(EditProfileScreen);
+export default EditProfileScreen;

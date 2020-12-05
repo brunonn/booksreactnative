@@ -1,100 +1,62 @@
-import {firebase} from '../tools/network';
+import auth from '@react-native-firebase/auth';
 import {
-  REGISTER_PENDING,
   REGISTER_SUCCESS,
-  REGISTER_FAIL,
   LOGOUT_SUCCESS,
-  LOGIN_PENDING,
   LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  AUTHENTICATION_PENDING,
-  AUTHENTICATION_SUCCESS,
-  AUTHENTICATION_FAIL,
-  SET_USERID_SUCCESS,
-  SET_USERID_FAIL,
+  AUTH_PENDING,
+  AUTH_FAIL,
+  CHANGE_PROFILE_SUCCESS,
 } from './types';
 
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const login = (email, password) => async (dispatch) => {
-  dispatch({
-    type: LOGIN_PENDING,
-  });
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password)
-    .then((data) => {
-      const userId = data.user.uid;
-      AsyncStorage.setItem('userId', userId);
-
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: userId,
-      });
-    })
-    .catch(() => {
-      dispatch({
-        type: LOGIN_FAIL,
-      });
+  dispatch({type: AUTH_PENDING});
+  try {
+    const data = await auth().signInWithEmailAndPassword(email, password);
+    const user = JSON.stringify(data.user);
+    await AsyncStorage.setItem('user', user);
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: user,
     });
+  } catch (error) {
+    console.log('login error', error);
+    dispatch({type: AUTH_FAIL});
+  }
 };
 
 export const register = (email, password) => async (dispatch) => {
-  dispatch({
-    type: REGISTER_PENDING,
-  });
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      dispatch({
-        type: REGISTER_SUCCESS,
-      });
-    })
-    .catch(() => {
-      dispatch({
-        type: REGISTER_FAIL,
-      });
-    });
+  dispatch({type: AUTH_PENDING});
+  try {
+    await auth().createUserWithEmailAndPassword(email, password);
+    dispatch({type: REGISTER_SUCCESS});
+  } catch {
+    dispatch({type: AUTH_FAIL});
+  }
 };
 
 export const logout = () => async (dispatch) => {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      dispatch({
-        type: LOGOUT_SUCCESS,
-      });
-    });
-};
-
-export const isSignedIn = () => async (dispatch) => {
-  dispatch({
-    type: AUTHENTICATION_PENDING,
-  });
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      dispatch({
-        type: AUTHENTICATION_SUCCESS,
-      });
-    } else {
-      dispatch({
-        type: AUTHENTICATION_FAIL,
-      });
-    }
-  });
-};
-
-export const setUserId = (userId) => async (dispatch) => {
-  if (userId !== null) {
-    dispatch({
-      type: SET_USERID_SUCCESS,
-      payload: userId,
-    });
-    return;
+  try {
+    await auth().signOut();
+    await AsyncStorage.clear();
+    dispatch({type: LOGOUT_SUCCESS});
+  } catch (error) {
+    console.log(error);
+    dispatch({type: AUTH_FAIL});
   }
-  dispatch({
-    type: SET_USERID_FAIL,
-  });
+};
+
+export const updateProfile = (displayName) => async (dispatch) => {
+  dispatch({type: AUTH_PENDING});
+  const data = {displayName};
+  try {
+    await auth().currentUser.updateProfile(data);
+    dispatch({
+      type: CHANGE_PROFILE_SUCCESS,
+      payload: data,
+    });
+  } catch {
+    dispatch({type: AUTH_FAIL});
+  }
 };

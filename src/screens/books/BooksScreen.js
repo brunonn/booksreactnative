@@ -8,18 +8,17 @@ import Spinner from '../../components/UI/Spinner';
 
 const BooksScreen = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const userId = useSelector((state) => state.auth.userId);
   const pending = useSelector((state) => state.books.pending);
   const userBooks = useSelector((state) => state.books.userBooks);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUserBooks(userId));
-  }, [dispatch, userId]);
+    dispatch(getUserBooks());
+  }, [dispatch]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await dispatch(getUserBooks(userId));
+    await dispatch(getUserBooks());
     setRefreshing(false);
   };
 

@@ -1,4 +1,7 @@
-import {firebase} from '../tools/network';
+import database from '@react-native-firebase/database';
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
+
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
@@ -17,12 +20,13 @@ import {
   DELETE_BOOK_FAIL,
 } from './types';
 
-export const getUserBooks = (userId) => async (dispatch) => {
+export const getUserBooks = () => async (dispatch) => {
+  const userId = auth().currentUser.uid;
   dispatch({
     type: GET_USER_BOOKS_PENDING,
   });
-  firebase
-    .database()
+
+  database()
     .ref('books/' + userId)
     .once('value')
     .then((snapshot) => {
@@ -43,19 +47,19 @@ export const getUserBooks = (userId) => async (dispatch) => {
     });
 };
 
-export const addBook = (userId, title, authors, uri) => async (dispatch) => {
+export const addBook = (title, authors, uri) => async (dispatch) => {
+  const userId = auth().currentUser.uid;
+
   dispatch({
     type: ADD_BOOK_PENDING,
   });
 
   // Get a key for a new Post.
-  const newBookKey = firebase
-    .database()
+  const newBookKey = database()
     .ref('books/' + userId)
     .push().key;
 
-  firebase
-    .database()
+  database()
     .ref('books/' + userId + '/' + newBookKey)
     .set({
       title: title,
@@ -76,19 +80,15 @@ export const addBook = (userId, title, authors, uri) => async (dispatch) => {
     });
 };
 
-export const addOwnBook = (userId, title, authors, imagePath) => async (
-  dispatch,
-) => {
+export const addOwnBook = (title, authors, imagePath) => async (dispatch) => {
+  const userId = auth().currentUser.uid;
   dispatch({
     type: ADD_BOOK_PENDING,
   });
 
   const uniqueId = uuidv4();
   console.log(uniqueId);
-  const booksRef = firebase
-    .storage()
-    .ref()
-    .child(`images/books/${userId}/${uniqueId}`);
+  const booksRef = storage().ref().child(`images/books/${userId}/${uniqueId}`);
 
   const blob = await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -111,15 +111,13 @@ export const addOwnBook = (userId, title, authors, imagePath) => async (
 
   const downloadUri = await snapshot.ref.getDownloadURL();
   //done with image
-  const newBookKey = await firebase
-    .database()
+  const newBookKey = await database()
     .ref('books/' + userId)
     .push().key;
 
   console.log('putting book item');
   try {
-    const response = await firebase
-      .database()
+    const response = await database()
       .ref('books/' + userId + '/' + newBookKey)
       .set({
         title: title,
@@ -138,10 +136,12 @@ export const addOwnBook = (userId, title, authors, imagePath) => async (
   }
 };
 
-export const deleteBook = (userId, bookId) => async (dispatch) => {
+export const deleteBook = (bookId) => async (dispatch) => {
+  const userId = auth().currentUser.uid;
+
   dispatch({type: DELETE_BOOK_PENDING});
 
-  const bookRef = firebase.database().ref(`books/${userId}/${bookId}`);
+  const bookRef = database().ref(`books/${userId}/${bookId}`);
 
   bookRef
     .set({})
@@ -158,11 +158,10 @@ export const deleteBook = (userId, bookId) => async (dispatch) => {
     });
 };
 
-export const getAllBooks = (userId) => async (dispatch) => {
+export const getAllBooks = () => async (dispatch) => {
   dispatch({type: GET_ALL_BOOKS_PENDING});
 
-  firebase
-    .database()
+  database()
     .ref('books')
     .once('value')
     .then((snapshot) => {

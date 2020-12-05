@@ -17,7 +17,7 @@ const BookDetailScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.userId);
   const deleteBookHandler = () => {
-    dispatch(deleteBook(userId, bookId));
+    dispatch(deleteBook(bookId));
     navigation.goBack();
   };
   return (

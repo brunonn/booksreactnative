@@ -16,9 +16,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import BookSearch from '../../components/UI/BookSearch';
 import {Button, Spinner} from '../../components/UI';
 
-const CreateBookScreen = ({navigation}) => {
-  const userId = useSelector((state) => state.auth.userId);
-  const pending = useSelector((state) => state.books.pending);
+const CreateBookScreen = ({navigation}: any) => {
+  const pending = useSelector((state: any) => state.books.pending);
 
   const [title, setTitle] = useState('');
   const [authors, setAuthors] = useState([]);
@@ -27,7 +26,7 @@ const CreateBookScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
   const addBookHandler = () => {
-    dispatch(addBook(userId, title, authors, uri));
+    dispatch(addBook(title, authors, uri));
     setTitle('');
     setAuthors([]);
     setUri('');

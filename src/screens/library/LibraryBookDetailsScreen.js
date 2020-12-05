@@ -19,7 +19,7 @@ const LibraryBookDetails = (props) => {
   const addBookHandler = () => {
     const {addBook, userId, navigation} = props;
 
-    addBook(userId, book.title, book.authors, book.uri);
+    addBook(book.title, book.authors, book.uri);
     navigation.navigate('Books', {
       screen: 'Books',
       initial: false,

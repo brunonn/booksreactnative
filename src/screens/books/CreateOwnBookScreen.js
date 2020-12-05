@@ -26,7 +26,7 @@ class CreateOwnBookScreen extends React.Component {
     const {userId, addOwnBook, navigation} = this.props;
     const {title, authors, bookSource} = this.state;
     const authorsList = authors.split(',');
-    addOwnBook(userId, title, authorsList, bookSource.uri);
+    addOwnBook(title, authorsList, bookSource.uri);
     navigation.navigate('Books');
   };
 

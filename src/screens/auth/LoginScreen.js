@@ -42,6 +42,7 @@ const LoginScreen = () => {
               onSubmit={loginHandler}>
               {({
                 handleChange,
+                handleBlur,
                 handleSubmit,
                 errors,
                 touched,
@@ -54,6 +55,7 @@ const LoginScreen = () => {
                       <Input
                         label="Email"
                         value={values.email}
+                        onBlur={handleBlur('email')}
                         onChangeText={handleChange('email')}
                         keyboardType={'email-address'}
                         error={errors.email}
@@ -62,6 +64,7 @@ const LoginScreen = () => {
                       <Input
                         label="Password"
                         value={values.password}
+                        onBlur={handleBlur('password')}
                         onChangeText={handleChange('password')}
                         secureTextEntry
                         error={errors.password}

@@ -22,13 +22,14 @@ class LibraryScreen extends Component {
     this.state = {booksFound: []};
   }
   componentDidMount() {
-    const {getAllBooks} = this.props;
-    getAllBooks();
+    this.props.getAllBooks();
   }
   searchBooksHandler = (term) => {
     const noLetters = ['', '(', ')'];
     for (const letter of noLetters) {
-      if (term.includes('(')) return;
+      if (term.includes(letter)) {
+        return;
+      }
     }
 
     const {allBooks} = this.props;
