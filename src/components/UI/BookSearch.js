@@ -4,15 +4,11 @@ import {
   ScrollView,
   Text,
   TextInput,
-  Button,
   StyleSheet,
-  TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import axios from 'axios';
-import {getColors} from '../../colors';
-import {Input} from 'react-native-elements';
+import {getColors} from '../../locales/colors';
 class BookSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +21,9 @@ class BookSearch extends React.Component {
   }
 
   bookRequest(searchText) {
-    if (searchText.length === 0) return;
+    if (searchText.length === 0) {
+      return;
+    }
     //change spaces to +
     const changedSearch = searchText.replace(/\s/g, '+');
 
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   buttonText: {
     color: getColors('orange'),

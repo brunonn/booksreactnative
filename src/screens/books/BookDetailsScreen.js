@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Button from '../../components/UI/Button';
 import {deleteBook} from '../../actions/booksActions';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 
 class BookDetailScreen extends React.Component {
   deleteBookHandler = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, ActivityIndicator} from 'react-native';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 
 const Spinner = () => {
   return (

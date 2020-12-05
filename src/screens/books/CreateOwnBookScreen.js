@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, ActivityIndicator} from 'react-native';
 import {Input} from 'react-native-elements';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 import ImagePicker from 'react-native-image-picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';

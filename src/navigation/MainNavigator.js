@@ -11,7 +11,7 @@ import CreateOwnBookScreen from '../screens/books/CreateOwnBookScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import {getColors} from '../colors';
+import {getColors} from '../locales/colors';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import LibraryScreen from '../screens/library/LibraryScreen';
 import LibraryBookDetailsScreen from '../screens/library/LibraryBookDetailsScreen';

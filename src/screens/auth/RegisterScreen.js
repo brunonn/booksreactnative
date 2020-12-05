@@ -1,67 +1,102 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {getColors} from '../../colors';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {getColors} from '../../locales/colors';
 import Button from '../../components/UI/Button';
-import {Input} from 'react-native-elements';
+import {Input, Spinner} from '../../components/UI';
 
 import {register} from '../../actions/authActions';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {Formik} from 'formik';
 
-class RegisterScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
-  }
-  registerHandler = () => {
-    const {register} = this.props;
-    const {email, password, confirmPassword} = this.state;
-    if (password !== confirmPassword) return;
-    register(email, password);
+import * as yup from 'yup';
+
+const registerValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Please enter valid email')
+    .required('Email Address is Required'),
+  password: yup
+    .string()
+    .min(6, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+  confirmPassword: yup
+    .string()
+    .min(6)
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+});
+
+const RegisterScreen = () => {
+  const dispatch = useDispatch();
+  const pending = useSelector((state) => state.auth.pending);
+  const registerHandler = ({email, password}) => {
+    dispatch(register(email, password));
   };
-  render() {
-    const {email, password, confirmPassword} = this.state;
-    return (
+  return (
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Twoje Książki</Text>
+          <Text style={styles.title}>Your books</Text>
         </View>
 
-        <View style={{width: '90%'}}>
-          <Input
-            autoCapitalize="none"
-            label="Email"
-            value={email}
-            onChangeText={(email) => this.setState({email})}
-          />
-          <Input
-            autoCapitalize="none"
-            label="Hasło"
-            value={password}
-            onChangeText={(password) => this.setState({password})}
-            secureTextEntry
-          />
-          <Input
-            autoCapitalize="none"
-            label="Potwierdź hasło"
-            value={confirmPassword}
-            onChangeText={(confirmPassword) => this.setState({confirmPassword})}
-            secureTextEntry
-          />
-        </View>
+        {pending ? (
+          <Spinner />
+        ) : (
+          <View style={{width: '90%', flex: 4, marginBottom: 40}}>
+            <Formik
+              validationSchema={registerValidationSchema}
+              initialValues={{email: '', password: '', confirmPassword: ''}}
+              onSubmit={registerHandler}>
+              {({
+                handleChange,
+                handleSubmit,
+                errors,
+                touched,
+                isValid,
+                values,
+              }) => (
+                <>
+                  <View style={{flex: 3}}>
+                    <Input
+                      label="Email"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                      keyboardType={'email-address'}
+                      error={errors.email}
+                      touched={touched.email}
+                    />
+                    <Input
+                      label="Password"
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      secureTextEntry
+                      error={errors.password}
+                      touched={touched.password}
+                    />
+                    <Input
+                      label="Confirm password"
+                      value={values.confirmPassword}
+                      onChangeText={handleChange('confirmPassword')}
+                      secureTextEntry
+                      error={errors.confirmPassword}
+                      touched={touched.confirmPassword}
+                    />
+                  </View>
 
-        <Button
-          title="Zarejestruj się"
-          onPress={() => this.registerHandler()}
-        />
+                  <Button
+                    buttonStyle={{flex: 1}}
+                    title="Register"
+                    onPress={handleSubmit}
+                    disabled={!isValid}
+                  />
+                </>
+              )}
+            </Formik>
+          </View>
+        )}
       </View>
-    );
-  }
-}
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -71,14 +106,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   titleContainer: {
+    flex: 1,
     marginTop: 30,
-    borderColor: getColors('orange'),
-    borderBottomWidth: 1,
   },
   title: {
     fontFamily: 'Poppins-Medium',
     color: getColors('whiteFont'),
     fontSize: 30,
+    borderColor: getColors('orange'),
+    borderBottomWidth: 1,
   },
   bottomTitle: {
     fontFamily: 'Poppins-Regular',
@@ -87,13 +123,5 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {},
 });
-RegisterScreen.propTypes = {
-  register: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
-};
 
-const mapStateToProps = (state) => ({
-  pending: state.auth.pending,
-});
-
-export default connect(mapStateToProps, {register})(RegisterScreen);
+export default RegisterScreen;

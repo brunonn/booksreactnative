@@ -1,69 +1,91 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Keyboard,
-} from 'react-native';
-import {getColors} from '../../colors';
-import Button from '../../components/UI/Button';
-import {Input} from 'react-native-elements';
-
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {getColors} from '../../locales/colors';
+import {useDispatch, useSelector} from 'react-redux';
+import {Spinner, Input, Button} from '../../components/UI';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 import {login} from '../../actions/authActions';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
-class LoginScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-    };
-  }
-  loginHandler = () => {
-    const {login} = this.props;
-    const {email, password} = this.state;
-    login(email, password);
+const loginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Please enter valid email')
+    .required('Email Address is Required'),
+  password: yup
+    .string()
+    .min(6, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+});
+
+const LoginScreen = () => {
+  const dispatch = useDispatch();
+  const pending = useSelector((state) => state.auth.pending);
+  const loginHandler = ({email, password}) => {
+    dispatch(login(email, password));
   };
 
-  render() {
-    const {email, password} = this.state;
-    return (
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Twoje Książki</Text>
-          </View>
-          <View style={{width: '90%'}}>
-            <Input
-              autoCapitalize="none"
-              label="Email"
-              value={email}
-              onChangeText={(email) => this.setState({email})}
-              inputStyle={{color: getColors('white')}}
-            />
-            <Input
-              autoCapitalize="none"
-              label="Hasło"
-              value={password}
-              onChangeText={(password) => this.setState({password})}
-              inputStyle={{color: getColors('white')}}
-              secureTextEntry
-            />
-          </View>
-          <Button
-            orange
-            title="Zaloguj się"
-            onPress={() => this.loginHandler()}
-          />
+  return (
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Your books</Text>
         </View>
-      </KeyboardAvoidingView>
-    );
-  }
-}
+
+        {pending ? (
+          <Spinner />
+        ) : (
+          <View style={{width: '90%', flex: 4, marginBottom: 40}}>
+            <Formik
+              validationSchema={loginValidationSchema}
+              initialValues={{email: '', password: ''}}
+              onSubmit={loginHandler}>
+              {({
+                handleChange,
+                handleSubmit,
+                errors,
+                touched,
+                isValid,
+                values,
+              }) => (
+                <>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <View>
+                      <Input
+                        label="Email"
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                        keyboardType={'email-address'}
+                        error={errors.email}
+                        touched={touched.email}
+                      />
+                      <Input
+                        label="Password"
+                        value={values.password}
+                        onChangeText={handleChange('password')}
+                        secureTextEntry
+                        error={errors.password}
+                        touched={touched.password}
+                      />
+                    </View>
+                  </View>
+                  <View style={{flex: 1, paddingTop: 60}}>
+                    <Button
+                      orange
+                      title="Sign in"
+                      onPress={handleSubmit}
+                      disabled={!isValid}
+                    />
+                  </View>
+                </>
+              )}
+            </Formik>
+          </View>
+        )}
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -73,23 +95,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   titleContainer: {
+    flex: 1,
     marginTop: 30,
-    borderColor: getColors('orange'),
-    borderBottomWidth: 1,
   },
   title: {
     fontFamily: 'Poppins-Medium',
     color: getColors('whiteFont'),
     fontSize: 30,
+    borderColor: getColors('orange'),
+    borderBottomWidth: 1,
   },
-});
-LoginScreen.propTypes = {
-  login: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  pending: state.auth.pending,
+  bottomTitle: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 15,
+    color: getColors('lightFont'),
+  },
+  buttonsContainer: {},
 });
 
-export default connect(mapStateToProps, {login})(LoginScreen);
+export default LoginScreen;

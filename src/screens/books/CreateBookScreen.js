@@ -13,7 +13,7 @@ import {login, register, logout} from '../../actions/authActions';
 import {addBook} from '../../actions/booksActions';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import BookSearch from '../../components/UI/BookSearch';

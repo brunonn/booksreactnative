@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Button = ({orange, title, onPress, buttonStyle, textStyle}) => {
@@ -16,7 +16,7 @@ const Button = ({orange, title, onPress, buttonStyle, textStyle}) => {
           style={{
             ...styles.title,
             color: orange ? getColors('black') : getColors('white'),
-            textStyle,
+            ...textStyle,
           }}>
           {title}
         </Text>

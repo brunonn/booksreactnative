@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 import PropTypes from 'prop-types';

@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import {getColors} from '../../colors';
+import {getColors} from '../../locales/colors';
 import {Input} from 'react-native-elements';
 import {getAllBooks} from '../../actions/booksActions';
 import PropTypes from 'prop-types';

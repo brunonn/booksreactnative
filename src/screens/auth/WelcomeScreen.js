@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {getColors} from '../../colors';
-import Button from '../../components/UI/Button';
+import {Button} from '../../components/UI';
+import {getColors} from '../../locales/colors';
 
 class WelcomeScreen extends React.Component {
   constructor(props) {
@@ -20,8 +20,15 @@ class WelcomeScreen extends React.Component {
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <Button orange title="Zaloguj się" onPress={() => navigation.navigate("Login")}/>
-          <Button title="Zarejestruj się" onPress={() => navigation.navigate("Register")}/>
+          <Button
+            orange
+            title="Zaloguj się"
+            onPress={() => navigation.navigate('Login')}
+          />
+          <Button
+            title="Zarejestruj się"
+            onPress={() => navigation.navigate('Register')}
+          />
         </View>
       </View>
     );
