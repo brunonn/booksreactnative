@@ -19,9 +19,11 @@ import {
   DELETE_BOOK_SUCCESS,
   DELETE_BOOK_FAIL,
 } from './types';
+import {Book} from '../models/Book';
 
 export const getUserBooks = () => async (dispatch) => {
   const userId = auth().currentUser.uid;
+
   dispatch({
     type: GET_USER_BOOKS_PENDING,
   });
@@ -31,13 +33,11 @@ export const getUserBooks = () => async (dispatch) => {
     .once('value')
     .then((snapshot) => {
       const keys = Object.keys(snapshot.val());
-      const values = Object.values(snapshot.val());
-      values.forEach((item, index) => {
-        item.id = keys[index];
-      });
+      const books = snapshot.val();
+
       dispatch({
         type: GET_USER_BOOKS_SUCCESS,
-        payload: values,
+        payload: {books, keys},
       });
     })
     .catch(() => {
@@ -47,7 +47,7 @@ export const getUserBooks = () => async (dispatch) => {
     });
 };
 
-export const addBook = (title, authors, uri) => async (dispatch) => {
+export const addBook = ({title, authors, uri}: Book) => async (dispatch) => {
   const userId = auth().currentUser.uid;
 
   dispatch({
@@ -90,7 +90,7 @@ export const addOwnBook = (title, authors, imagePath) => async (dispatch) => {
   console.log(uniqueId);
   const booksRef = storage().ref().child(`images/books/${userId}/${uniqueId}`);
 
-  const blob = await new Promise((resolve, reject) => {
+  const blob: any = await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       resolve(xhr.response);
@@ -165,21 +165,20 @@ export const getAllBooks = () => async (dispatch) => {
     .ref('books')
     .once('value')
     .then((snapshot) => {
-      const keys = Object.keys(snapshot.val());
-      const values = Object.values(snapshot.val());
-
-      const books = [];
-      values.forEach((data, index) => {
-        const bookData = Object.values(data);
-        bookData.forEach((book) => {
-          const ownerId = keys[index];
-          books.push({...book, ownerId: ownerId});
-        });
-      });
+      const userKeys = Object.keys(snapshot.val());
+      const allUsersBooks = snapshot.val();
+      let books = {};
+      let keys = [];
+      for (const key of userKeys) {
+        books = {...books, ...allUsersBooks[key]};
+        for (const bookKey in allUsersBooks[key]) {
+          keys = [...keys, bookKey];
+        }
+      }
 
       dispatch({
         type: GET_ALL_BOOKS_SUCCESS,
-        payload: books,
+        payload: {books, keys},
       });
     })
     .catch((err) => {

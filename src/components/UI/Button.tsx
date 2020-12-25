@@ -6,11 +6,12 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
+  ButtonProps as RNButtonProps,
 } from 'react-native';
-import {getColors} from '../../locales/colors';
+import {Colors} from '../../locales/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-interface ButtonProps {
+interface ButtonProps extends RNButtonProps {
   orange: boolean;
   title: string;
   onPress: () => void;
@@ -30,13 +31,13 @@ const Button = ({
       <View
         style={[
           styles.container,
-          {backgroundColor: orange ? getColors('orange') : getColors('cyan')},
+          {backgroundColor: orange ? Colors.orange : Colors.cyan},
           buttonStyle,
         ]}>
         <Text
           style={[
             styles.title,
-            {color: orange ? getColors('black') : getColors('white')},
+            {color: orange ? Colors.black : Colors.white},
             textStyle,
           ]}>
           {title}
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     width: 300,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: getColors('orange'),
+    backgroundColor: Colors.orange,
     padding: 15,
     marginVertical: 10,
     elevation: 2,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontFamily: 'Poppins-Regular',
-    color: getColors('black'),
+    color: Colors.black,
   },
 });
 export default Button;

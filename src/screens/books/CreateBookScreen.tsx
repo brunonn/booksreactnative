@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {addBook} from '../../actions/booksActions';
 import {useSelector, useDispatch} from 'react-redux';
-import {getColors} from '../../locales/colors';
+import {Colors} from '../../locales/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import BookSearch from '../../components/UI/BookSearch';
@@ -20,7 +20,7 @@ const CreateBookScreen = ({navigation}: any) => {
   const pending = useSelector((state: any) => state.books.pending);
 
   const [title, setTitle] = useState('');
-  const [authors, setAuthors] = useState([]);
+  const [authors, setAuthors] = useState<string[]>([]);
   const [uri, setUri] = useState('');
 
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ const CreateBookScreen = ({navigation}: any) => {
         <View style={styles.topContainer}>
           <Text style={styles.topText}>Search for book or </Text>
           <TouchableOpacity onPress={() => navigation.navigate('CreateOwn')}>
-            <Text style={[styles.topText, {color: getColors('orange')}]}>
+            <Text style={[styles.topText, {color: Colors.orange}]}>
               add your own
             </Text>
           </TouchableOpacity>

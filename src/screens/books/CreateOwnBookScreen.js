@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {Input} from 'react-native-elements';
-import {getColors} from '../../locales/colors';
+import {Colors} from '../../locales/colors';
 import ImagePicker from 'react-native-image-picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -84,7 +84,7 @@ class CreateOwnBookScreen extends React.Component {
               <Icon
                 name="questioncircleo"
                 size={60}
-                color={getColors('background')}
+                color={Colors.background}
               />
               <Text style={styles.info}>Wybierz zdjęcie</Text>
             </View>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   info: {
     fontFamily: 'Poppins-Regular',
     paddingHorizontal: 10,
-    color: getColors('grey'),
+    color: Colors.grey,
   },
   imageContainer: {
     marginTop: 20,

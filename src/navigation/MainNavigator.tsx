@@ -1,6 +1,9 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 
 import BooksScreen from '../screens/books/BooksScreen';
 import BookDetailsScreen from '../screens/books/BookDetailsScreen';
@@ -11,12 +14,19 @@ import CreateOwnBookScreen from '../screens/books/CreateOwnBookScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import {getColors} from '../locales/colors';
+import {Colors} from '../locales/colors';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import LibraryScreen from '../screens/library/LibraryScreen';
 import LibraryBookDetailsScreen from '../screens/library/LibraryBookDetailsScreen';
+import {
+  BookStackParams,
+  CreateBookStackParams,
+  LibraryStackParams,
+  ProfileStackParams,
+  TabParams,
+} from './NavigationParams';
 
-const defaultNavOptions = {
+const defaultNavOptions: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: '#fff',
   },
@@ -27,7 +37,7 @@ const defaultNavOptions = {
   },
 };
 
-const BooksStack = createStackNavigator();
+const BooksStack = createStackNavigator<BookStackParams>();
 const BooksStackNavigator = () => {
   return (
     <BooksStack.Navigator screenOptions={defaultNavOptions}>
@@ -44,7 +54,7 @@ const BooksStackNavigator = () => {
     </BooksStack.Navigator>
   );
 };
-const CreateBookStack = createStackNavigator();
+const CreateBookStack = createStackNavigator<CreateBookStackParams>();
 const CreateBookStackNavigator = () => {
   return (
     <CreateBookStack.Navigator screenOptions={defaultNavOptions}>
@@ -61,7 +71,7 @@ const CreateBookStackNavigator = () => {
     </CreateBookStack.Navigator>
   );
 };
-const ProfileStack = createStackNavigator();
+const ProfileStack = createStackNavigator<ProfileStackParams>();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator screenOptions={defaultNavOptions}>
@@ -78,7 +88,7 @@ const ProfileStackNavigator = () => {
     </ProfileStack.Navigator>
   );
 };
-const LibraryStack = createStackNavigator();
+const LibraryStack = createStackNavigator<LibraryStackParams>();
 const LibraryStackNavigator = () => {
   return (
     <LibraryStack.Navigator screenOptions={defaultNavOptions}>
@@ -96,12 +106,12 @@ const LibraryStackNavigator = () => {
   );
 };
 
-const MainTab = createBottomTabNavigator();
+const MainTab = createBottomTabNavigator<TabParams>();
 export default function MainNavigator() {
   return (
     <MainTab.Navigator
       screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({color, size}) => {
           let iconName;
 
           if (route.name === 'Books') {
@@ -119,8 +129,8 @@ export default function MainNavigator() {
         },
       })}
       tabBarOptions={{
-        activeTintColor: getColors('orange'),
-        inactiveTintColor: getColors('grey'),
+        activeTintColor: Colors.orange,
+        inactiveTintColor: Colors.grey,
       }}>
       <MainTab.Screen
         name="Books"

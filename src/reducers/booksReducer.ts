@@ -16,6 +16,9 @@ import {
 const initialState = {
   userBooks: [],
   allBooks: [],
+  allBooksKeys: [],
+
+  userBooksKeys: [],
   loading: true,
   error: false,
   pending: false,
@@ -32,7 +35,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         pending: false,
-        userBooks: payload,
+        userBooks: payload.books,
+        userBooksKeys: payload.keys,
       };
     case GET_USER_BOOKS_FAIL:
       return {
@@ -65,7 +69,8 @@ export default (state = initialState, action) => {
     case GET_ALL_BOOKS_SUCCESS:
       return {
         ...state,
-        allBooks: payload,
+        allBooks: payload.books,
+        allBooksKeys: payload.keys,
         pending: false,
       };
     case GET_ALL_BOOKS_FAIL:

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {getColors} from '../../locales/colors';
+import {Colors} from '../../locales/colors';
 import Button from '../../components/UI/Button';
 import {Input, Spinner} from '../../components/UI';
 
@@ -101,7 +101,7 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: getColors('background'),
+    backgroundColor: Colors.background,
     alignItems: 'center',
     justifyContent: 'space-around',
   },
@@ -111,15 +111,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Medium',
-    color: getColors('whiteFont'),
+    color: Colors.whiteFont,
     fontSize: 30,
-    borderColor: getColors('orange'),
+    borderColor: Colors.orange,
     borderBottomWidth: 1,
   },
   bottomTitle: {
     fontFamily: 'Poppins-Regular',
     fontSize: 15,
-    color: getColors('lightFont'),
+    color: Colors.lightFont,
   },
   buttonsContainer: {},
 });

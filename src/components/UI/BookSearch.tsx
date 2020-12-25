@@ -7,10 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {Colors, getColors} from '../../locales/colors';
+import {Colors} from '../../locales/colors';
 import useDebounce from '../../hooks/useDebounce';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {bookRequest} from '../../api/books';
+import {BookItemReponse} from '../../models/BooksApiResponse';
 
 interface BookResult {
   authors: string[];
@@ -22,9 +23,9 @@ interface BookSearchProps {
   onResultFound: (result: BookResult) => void;
 }
 const BookSearch = ({onResultFound}: BookSearchProps) => {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<BookItemReponse[]>([]);
   const [searchText, setSearchText] = useState('');
-  const inputRef = useRef(null);
+  const inputRef = useRef<TextInput>(null);
 
   const debouncedSearchText = useDebounce(searchText, 300);
 
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: getColors('orange'),
+    color: Colors.orange,
   },
 });
 

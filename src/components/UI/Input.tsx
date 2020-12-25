@@ -5,8 +5,8 @@ import {Colors} from '../../locales/colors';
 
 interface InputProps extends TextInputProps {
   label: string;
-  error: string;
-  touched: boolean;
+  error: string | undefined;
+  touched: boolean | undefined;
 }
 
 const Input = ({label, error, touched, ...props}: InputProps) => {
@@ -23,7 +23,7 @@ const Input = ({label, error, touched, ...props}: InputProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     position: 'relative',
   },
   label: {
