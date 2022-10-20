@@ -31,7 +31,7 @@
     "react-native-get-random-values": "^1.4.0",
     "react-native-google-books": "^1.0.4",
     "react-native-image-picker": "^2.3.3",
-    "react-native-reanimated": "^2.0.0-alpha.9.2",
+    "react-native-reanimated": "^2.10.0",
     "react-native-safe-area-context": "^3.0.7",
     "react-native-screens": "^2.15.0",
     "react-native-vector-icons": "^7.0.0",
